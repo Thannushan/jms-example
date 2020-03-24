@@ -2,7 +2,7 @@ package com.example.config;
 
 import com.example.subscriber.Subscriber;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQTopic;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.core.JmsTemplate;
@@ -28,30 +28,29 @@ public class JmsConnectionConfig {
     }
 
     @Bean
-    public Topic inputTopic(){
-        Topic topic = new ActiveMQTopic(appConfig.getInputTopicName());
-        return topic;
+    public Queue inputQueue(){
+        Queue queue = new ActiveMQQueue(appConfig.getInputQueueName());
+        return queue;
     }
 
     @Bean
-    public JmsTemplate inputJmsTemplate(){
+    public JmsTemplate jmsTemplate(){
         JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory());
-        jmsTemplate.setDefaultDestination(inputTopic());
-        jmsTemplate.setPubSubDomain(true);
+        jmsTemplate.setDefaultDestination(inputQueue());
         return  jmsTemplate;
     }
 
     @Bean
-    public Topic outputTopic(){
-        Topic topic = new ActiveMQTopic(appConfig.getOutputTopicName());
-        return topic;
+    public Queue outputQueue(){
+        Queue queue = new ActiveMQQueue(appConfig.getOutputQueueName());
+        return queue;
     }
 
 
     @Bean(name = "messageListenerOne")
     public MessageListenerContainer messageListenerContainer(){
         DefaultMessageListenerContainer messageListenerContainer = new DefaultMessageListenerContainer();
-        messageListenerContainer.setDestination(outputTopic());
+        messageListenerContainer.setDestination(inputQueue());
         messageListenerContainer.setMessageListener(subscriber);
         messageListenerContainer.setConnectionFactory(connectionFactory());
         return messageListenerContainer;

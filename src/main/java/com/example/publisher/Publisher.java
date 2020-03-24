@@ -18,8 +18,11 @@ public class Publisher {
         jmsTemplate.sendAndReceive(new MessageCreator(){
             @Override
             public Message createMessage(Session session) throws JMSException {
+                Destination tempDest = session.createTemporaryQueue();
+                MessageConsumer responseConsumer = session.createConsumer(tempDest);
                 Message message = session.createTextMessage(checkMessage);
                 message.setJMSCorrelationID(correlationId);
+                message.setJMSReplyTo(tempDest);
                 return message;
             }
         });

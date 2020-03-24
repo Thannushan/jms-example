@@ -21,12 +21,6 @@ public class ActiveMQDemoShell {
     @Autowired
     Publisher publisher;
 
-    @Autowired
-    AppConfig appConfig;
-
-    @Autowired
-    JmsConnectionConfig jmsConnectionConfig;
-
     @ShellMethod(value="Send JSON Message")
     public void send(String filename){
         try {
