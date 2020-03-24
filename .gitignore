@@ -32,6 +32,5 @@ build/
 
 .mvn/
 mvnw*
-*.md
 *.log
 *.iml
